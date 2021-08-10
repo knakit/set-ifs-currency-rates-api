@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ROUTE_ADDRESS xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:ifsworld-com:schemas:routeaddress_route_address">
+ <ADDRESS_ID>c30d6077-5121-4f7b-bdf4-62e70b4761b1</ADDRESS_ID>
+ <TRANSPORT_CONNECTOR>Http</TRANSPORT_CONNECTOR>
+ <ADDRESS_DATA>http://api.knak.it:8290/services/set-ifs-currency-rates</ADDRESS_DATA>
+ <ADDRESS_DATA_2 xsi:nil="1"/>
+ <SENDER xsi:nil="1"/>
+ <SENDER_ORGANIZATION xsi:nil="1"/>
+ <RECEIVER xsi:nil="1"/>
+ <RECEIVER_ORGANIZATION xsi:nil="1"/>
+ <OPTIONS>QXV0aG9yaXphdGlvbj1CYXNpYyBaSE5xT21SemFnPT0NCgo=</OPTIONS>
+ <DESCRIPTION>knak.it Update IFS Currency Rates</DESCRIPTION>
+ <TRANSFORMER xsi:nil="1"/>
+ <RESPONSE_TRANSFORMER xsi:nil="1"/>
+ <ENVELOPE xsi:nil="1"/>
+ <SUB_SYSTEM xsi:nil="1"/>
+ <ENCODING>UTF-8</ENCODING>
+ <SENDER_INSTANCE>HTTP_SENDER1</SENDER_INSTANCE>
+ <ZIP xsi:nil="1"/>
+ <TRANSFORMER_LIST>,,,</TRANSFORMER_LIST>
+ <CUSTOMIZED xsi:nil="1"/>
+ <ENVELOPE_RESPONSE xsi:nil="1"/>
+</ROUTE_ADDRESS>

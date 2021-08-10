@@ -16,8 +16,8 @@ You need a API key to use the service. Send an email to [knakit.dev@gmail.com](m
 
 2. Import and Publish Application Configuration Package
   * Go to the Application Package, Right mouse click on the Custom Menu item, Show Details
-  * Change the highlighted fields with corresponing values you got with the api key
-<br>
+  * Change the highlighted fields with corresponing values you got with the api key email
+
 | ![custom event setup](./doc/images/custom-menu-setup.png) | 
 |:--:| 
 | *Custom Menu setup* |

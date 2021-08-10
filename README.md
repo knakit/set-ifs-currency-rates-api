@@ -8,6 +8,22 @@ You need a API key to use the service. Send an email to [knakit.dev@gmail.com](m
 * IFS Url: IFS Instance url with port
 * Customer Contact: email for us to update about API changes or downtimes
 
+## Setup
+1. Download files inculded in [source/ifs](https://github.com/knakit/set-ifs-currency-rates-api/tree/main/source)
+  * [Application Configuration Package](source/ifs/server/appconfig/knakit-set-ifs-currency-rates-api.zip)
+  * [Routing Address](source/ifs/server/connect_config/RouteAddress_knak.it_Update_IFS_Currency_Rates.xml)
+  * [Routing Condition](source/ifs/server/connect_config/RouteCondition_knak.it_Update_IFS_Currency_Rates.xml)
+
+2. Import and Publish Application Configuration Package
+  * Go to the Application Package, Right mouse click on the Custom Menu item, Show Details
+  * Change the highlighted fields with corresponing values you got with the api key
+<br>
+| ![custom event setup](./doc/images/custom-menu-setup.png) | 
+|:--:| 
+| *Custom Menu setup* |
+
+4. Import Routing Rule
+
 ## Usage
 This API is designed to update IFS currency rates from European Central Bank(ECB). You can either create a custom menu to update currency rates whenever required or schedule it to run daily as a IFS scheduled task or Windows task. To use this service, your IFS instance must be open to internet. If your IFS is not open to internet and you are still interested in using this service, please get in touch with [knakit.dev@gmail.com](mailto:knakit.dev@gmail.com).
 

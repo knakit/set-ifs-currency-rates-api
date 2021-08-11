@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="SeqInsertIFSCurrencyRatePLSQL" onError="SeqErrorHandling" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <property description="currency" expression="json-eval($.currency)" name="currency" scope="default" type="STRING"/>
+    <property description="rate" expression="json-eval($.rate)" name="rate" scope="default" type="STRING"/>
+    <log description="log property values debug" level="custom" separator=",">
+        <property expression="$ctx:base_currency" name="base_currency"/>
+        <property expression="$ctx:timestamp" name="timestamp"/>
+        <property expression="$ctx:currency" name="currency"/>
+        <property expression="$ctx:rate" name="rate"/>
+        <property expression="get-property('operation','BaseToRefCurrRate')" name="BaseToRefCurrRate"/>
+    </log>
+    <property description="IFS Insert call start time" expression="get-property('SYSTEM_TIME')" name="ifsInsertStartTime" scope="default" type="STRING"/>
+    <payloadFactory description="Insert Currency Rate PLSQL" media-type="xml">
+        <format>
+            <request xmlns="">
+                <bindVariables>
+                    <INFO/>
+                    <COMPANY>$1</COMPANY>
+                    <CURRENCY_TYPE>$2</CURRENCY_TYPE>
+                    <BASE_CURRENCY_CODE>$3</BASE_CURRENCY_CODE>
+                    <REF_CURRENCY_CODE>$4</REF_CURRENCY_CODE>
+                    <CURRENCY_CODE>$5</CURRENCY_CODE>
+                    <CURRENCY_RATE>$6</CURRENCY_RATE>
+                    <BASE_TO_REF_RATE>$7</BASE_TO_REF_RATE>
+                    <VALID_FROM>$8</VALID_FROM>
+                </bindVariables>
+                <plsqlBlock>
+DECLARE
+  company_ VARCHAR2(100);
+  currency_type_ VARCHAR2(100);
+  base_currency_code_ VARCHAR2(5);
+  ref_currency_code_ VARCHAR2(5);
+  base_to_ref_rate_ NUMBER;
+  currency_code_ VARCHAR2(5);
+  currency_rate_ NUMBER;
+  valid_from_ DATE;
+  info_  VARCHAR2(32000);
+  curr_type_rec_ CURRENCY_TYPE%ROWTYPE; 
+  rate_conv_ NUMBER;
+  
+  CURSOR get_curr_type IS
+   select * from CURRENCY_TYPE 
+   where  company = company_
+   and currency_type = currency_type_;
+----------------------------------------------------------------
+------------------- Add_Currency_Rate (START) ------------------
+----------------------------------------------------------------
+ FUNCTION Add_Currency_Rate (curr_type CURRENCY_TYPE%ROWTYPE,
+                             curr_code CURRENCY_RATE.CURRENCY_CODE%TYPE,
+                             curr_rate CURRENCY_RATE.CURRENCY_RATE%TYPE,
+                             valid_from CURRENCY_RATE.VALID_FROM%TYPE) RETURN VARCHAR2
+  AS
+     rate_attr_         VARCHAR2(32000);
+     objid_             VARCHAR2(30) ;
+     objversion_        VARCHAR2(30) ;
+     info_             VARCHAR2(2000) ;
+     conv_rate_        NUMBER;
+     conv_factor_      NUMBER;
+     
+     dummy_             NUMBER;
+     info_text_        VARCHAR2(2000) := '';
+       CURSOR currency_rate_exist (company_ VARCHAR2,
+                                    curr_type_ VARCHAR2,
+                                    curr_code_ VARCHAR2,
+                                    valid_from_ date) IS
+           SELECT 1
+           FROM   currency_rate
+           WHERE  company       = company_
+           AND    currency_type = curr_type_
+           AND    currency_code = curr_code_
+           AND    valid_from    = valid_from_;   
+                               
+  BEGIN
+     IF Currency_Code_API.Exists(curr_type.company, curr_code) THEN
+        
+        OPEN currency_rate_exist (curr_type.company, curr_type.currency_type,curr_code, valid_from);
+        FETCH currency_rate_exist INTO dummy_;
+        IF (currency_rate_exist%NOTFOUND) THEN      
+           conv_factor_ := Currency_Code_API.Get_Conversion_Factor (curr_type.company, curr_code);
+           conv_rate_ := curr_rate*conv_factor_;
+           Client_SYS.Clear_Attr(rate_attr_);
+           Client_SYS.Add_To_Attr('COMPANY', curr_type.company,rate_attr_);
+           Client_SYS.Add_To_Attr('CURRENCY_TYPE', curr_type.currency_type, rate_attr_);
+           Client_SYS.Add_To_Attr('REF_CURRENCY_CODE', curr_type.ref_currency_code, rate_attr_);
+           Client_SYS.Add_To_Attr('CURRENCY_CODE', curr_code, rate_attr_);
+           Client_SYS.Add_To_Attr('CURRENCY_RATE', conv_rate_, rate_attr_);
+           Client_SYS.Add_To_Attr('VALID_FROM', valid_from, rate_attr_);
+           Client_SYS.Add_To_Attr('CONV_FACTOR', conv_factor_, rate_attr_);
+           Currency_Rate_API.New__(info_, objid_,objversion_,rate_attr_,'DO') ;
+           info_text_ := 'SUCCESS: Company: ' || curr_type.company || ' Currency Type: ' || curr_type.currency_type ||' Currency Code: '|| curr_code || ' Currency Rate: ' || conv_rate_ || ' Valid From: ' || valid_from;         
+        ELSE
+           info_text_ := 'WARNING: Currency rate with same valid from date already exist. Company: ' || curr_type.company || ' Currency Type: ' || curr_type.currency_type || ' Currency Code: '|| curr_code || ' Valid From: ' || valid_from;        
+        END IF;
+        CLOSE currency_rate_exist;
+     ELSE
+        info_text_ := 'WARNING: Currency code ' || curr_code || ' does not exist in company ' || curr_type.company;    
+     END IF;
+     RETURN info_text_;
+  END Add_Currency_Rate;
+----------------------------------------------------------------
+------------------- Add_Currency_Rate (END) --------------------
+---------------------------------------------------------------- 
+BEGIN
+  BEGIN
+      
+    company_ := :COMPANY;
+    currency_type_ := :CURRENCY_TYPE;
+    base_currency_code_ := :BASE_CURRENCY_CODE;
+    ref_currency_code_ :=  :REF_CURRENCY_CODE;
+    currency_code_ := :CURRENCY_CODE;
+    currency_rate_ := TO_NUMBER(:CURRENCY_RATE);
+    base_to_ref_rate_ := TO_NUMBER(:BASE_TO_REF_RATE);
+    valid_from_ := TO_DATE(:VALID_FROM, 'YYYY-MM-DD');
+    
+    --Assign the inputs back for return with the payload
+    :COMPANY := company_;
+    :CURRENCY_TYPE := currency_type_;
+    :BASE_CURRENCY_CODE := base_currency_code_;
+    :REF_CURRENCY_CODE := ref_currency_code_;
+    :CURRENCY_CODE := currency_code_;
+    :CURRENCY_RATE := currency_rate_;
+    :BASE_TO_REF_RATE := base_to_ref_rate_;
+    :VALID_FROM := valid_from_;
+    
+   company_api.exist(company_);
+   currency_type_api.exist(company_, currency_type_);
+     
+   IF ref_currency_code_ != currency_type_api.get_ref_currency_code(company_,currency_type_) THEN
+     ERROR_Sys.Appl_General('CKnakitCurrencyUtil', 'CINVALIDREFCURR: Provided  Ref Currency Code ' || ref_currency_code_  || ' for Company ' ||company_  || ', Currency Type ' || currency_type_ || ' is incorrect. It should be ' || currency_type_api.get_ref_currency_code(company_,currency_type_));
+   END IF;  
+
+   OPEN get_curr_type;
+   FETCH get_curr_type INTO curr_type_rec_;
+   CLOSE get_curr_type; 
+      
+  
+    IF ref_currency_code_ = base_currency_code_ THEN
+      -- If ref_currency_code_ = base_currency_code_, 
+      -- a new record shall be created for the currency code and rate available in the message. 
+      -- The valid from date on the created records shall be equal to the TIMESTAMP    
+      
+      info_ := Add_Currency_Rate(curr_type_rec_, currency_code_, currency_rate_, valid_from_);        
+      
+    ELSE
+      -- If the ref currency code on the selected currency rate type is not base currency, 
+      -- first, we need to convert the incoming currency rate for the Ref Currency Code 
+      -- After conversion, a new record shall be created for each currency code and rate 
+      -- available in the message.
+        
+      rate_conv_ := currency_rate_/base_to_ref_rate_;      
+      info_ := Add_Currency_Rate(curr_type_rec_, currency_code_, 1/rate_conv_, valid_from_);      
+      
+      --add rate for base currency
+      --should run only first time
+      
+      IF NOT currency_rate_api.exists(company_,currency_type_, base_currency_code_,valid_from_) THEN
+         info_ := info_ || ', EUR_LINE=' || Add_Currency_Rate(curr_type_rec_, base_currency_code_, base_to_ref_rate_, valid_from_);
+      END IF;  
+      
+    END IF;
+  --EXCEPTION
+  -- WHEN OTHERS THEN      
+  --    info_ := 'ERROR: Error while executing';
+      
+  END;
+  :INFO := info_;
+END;
+  </plsqlBlock>
+            </request>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:IfsCompanyId"/>
+            <arg evaluator="xml" expression="$ctx:IfsCurrencyRateType"/>
+            <arg evaluator="xml" expression="$ctx:base_currency"/>
+            <arg evaluator="xml" expression="$ctx:IfsRefCurrencyCode"/>
+            <arg evaluator="xml" expression="$ctx:currency"/>
+            <arg evaluator="xml" expression="$ctx:rate"/>
+            <arg evaluator="xml" expression="get-property('operation','BaseToRefCurrRate')"/>
+            <arg evaluator="xml" expression="$ctx:timestamp"/>
+        </args>
+    </payloadFactory>
+    <knakitifs.init>
+        <IfsConnURL>{$ctx:IfsConnURL}</IfsConnURL>
+        <IfsVersion>{$ctx:IfsVersion}</IfsVersion>
+        <IfsUserID>{$ctx:IfsUserID}</IfsUserID>
+        <IfsPassword>{$ctx:IfsPassword}</IfsPassword>
+    </knakitifs.init>
+    <knakitifs.plsqlBlock/>
+    <property description="IFS Insert call finish time" expression="get-property('SYSTEM_TIME')" name="ifsInsertFinishTime" scope="default" type="STRING"/>
+    <log description="Log Info" level="custom">
+        <property expression="$ctx:CustomerId" name="CUSTOMER-ID"/>
+        <property expression="$ctx:InstanceId" name="INSTANCE-ID"/>
+        <property name="SEQUENCE" value="SeqInsertIFSCurrencyRatePLSQL"/>
+        <property expression="$ctx:ifsInsertFinishTime - $ctx:ifsInsertStartTime" name="DURATION"/>
+        <property expression="//*[local-name()='INFO']/text()" name="INFO"/>
+    </log>
+    <call>
+        <endpoint>
+            <address uri="http://localhost:8290/services/dummy">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>-1</progressionFactor>
+                    <maximumDuration>0</maximumDuration>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </address>
+        </endpoint>
+    </call>
+</sequence>

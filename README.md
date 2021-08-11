@@ -1,4 +1,4 @@
-# An out of the box solution for updating IFS currency rates
+# An out of the box solution for updating IFS Currency Rates
 knak.it IFS Currency Rates API is a free service for updating IFS currency rates values [published by the European Central Bank](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html).
 It is an out of the box solution to update the IFS currency rates with a single click and without needing to worry about any customization or aditional configuration.
 

@@ -20,6 +20,14 @@ You need a API key (which is free) to use the service. Send an email to [knakit.
 - [x] IFS Version - Your IFS version (APPS75, APPS8, APPS9, APPS10)
 - [x] Customer Contact: email for us to update about API changes or downtimes
 
+---
+**NOTE**
+
+Your IFS Instance should be open to internet to use this service. If your IFS is not open to internet and you are still interested in using this service, please get in touch with [knakit.dev@gmail.com](mailto:knakit.dev@gmail.com).
+
+---
+
+
 ## Setup
 #### IFS Connect Setup
 1. Download following files inculded in [source/ifs](https://github.com/knakit/set-ifs-currency-rates-api/tree/main/source/ifs)

@@ -193,6 +193,10 @@ Hint: Passwords are case sensitive.</details>
 
 ```Please note that if the message status is Released or Waiting, there should be a problem with your Application Message processing.```
 
+#### When calling via HTTP call
+
+Check the response message. See [Response](#response) section for details about different HTTP status codes.
+
 ## FAQ
 
 #### Which Currencies are supported?

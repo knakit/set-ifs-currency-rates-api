@@ -22,7 +22,7 @@ You need a API key (which is free) to use the service. Send an email to [knakit.
 
 ## Setup
 #### IFS Connect Setup
-1. Download following files inculded in [source/ifs](https://github.com/knakit/set-ifs-currency-rates-api/tree/main/source)
+1. Download following files inculded in [source/ifs](https://github.com/knakit/set-ifs-currency-rates-api/tree/main/source/ifs)
    * [Routing Address](source/ifs/server/connect_config/RouteAddress_knak.it_Update_IFS_Currency_Rates.xml)
    * [Routing Condition](source/ifs/server/connect_config/RouteCondition_knak.it_Update_IFS_Currency_Rates.xml)
 

@@ -1,8 +1,18 @@
 # API to Update IFS Currency Rates
 knak.it IFS Currency Rates API is a free service for updating IFS currency rates values [published by the European Central Bank](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html).
+It is an out of the box solution to update the IFS currency rates with a single click and without needing to worry about any customization or aditional configuration.
+
+## Jump to
+* [Getting Started](#getting-started)
+* [Setup](#setup)
+* [About the API and Usage](#about-the-api-and-usage)
+* [Troubleshoot](#troubleshoot)
+* [FAQ](#faq)
+* [Credits](#credits)
+
 
 ## Getting Started
-You need a API key to use the service. Send an email to [knakit.dev@gmail.com](mailto:knakit.dev@gmail.com?subject=IFS%20Currency%20Rates%20API%20key) with following information.
+You need a API key (which is free) to use the service. Send an email to [knakit.dev@gmail.com](mailto:knakit.dev@gmail.com?subject=IFS%20Currency%20Rates%20API%20key) with following information.
 * Customer ID: Your company name
 * Instance ID: IFS Instance (Dev/Test/Prod...etc)
 * IFS Url: IFS Instance url with port
@@ -47,24 +57,22 @@ You need a API key to use the service. Send an email to [knakit.dev@gmail.com](m
 3. Go to the Currency Rates window. Right mouse click on header, Properties. Make sure Include Custom Items is checked.
 4. If you don't see the Custom menu, try right click, Custom Objects, Reload Configuration.
 
-## Troubleshoot
-
-#### When setup as a Custom Menu in IFS EE Currency Rates window
-* Go to the Application Messages and Search for Message Function ```KNAKIT-UPDATE-CURRENCY-RATES```
-* Go to the details of the Application Message. If the message status is Failed, Check the error message in the error text box 
-* Double chick on the Address line to see the response message. Any IFS errors should capture in the response XML.
-
-```Please note that if the message status is Released or Waiting, there should be a problem with your Application Message processing.```
-
 ## About the API and Usage
 This API is designed to update IFS currency rates from European Central Bank(ECB). You can either create a custom menu to update currency rates whenever required or schedule it to run daily as a IFS scheduled task or Windows task. To use this service, your IFS instance must be open to internet. If your IFS is not open to internet and you are still interested in using this service, please get in touch with [knakit.dev@gmail.com](mailto:knakit.dev@gmail.com).
 
-#### Api Endpoint
+#### Request
+
+##### Api Endpoint
 ```
 http://api.knak.it:8290/services/set-ifs-currency-rates
 ```
 
-#### Sample Body
+##### Supported Protocols
+```http
+POST /services/set-ifs-currency-rates
+```
+
+##### Sample Body
 ```xml
 <SetIfsCurrencyRatesRequest>
     <ifs:request xmlns:ifs="http://wso2.org/knak/ifs/connector">
@@ -82,11 +90,11 @@ http://api.knak.it:8290/services/set-ifs-currency-rates
 </SetIfsCurrencyRatesRequest>
 ```
 
-#### Authorization
+##### Authorization
 You need to provide IFS username an password as basic authentication header. User ID you provide must be able to insert new records in Accounting Rules > Currency > Currency Rates.
 Please read [FAQ](#faq) section on how to setup user and permission.
 
-#### Sample Request
+##### Sample Request
 ```http
 POST /services/set-ifs-currency-rates HTTP/1.1
 Host: api.knak.it:8290
@@ -174,7 +182,23 @@ Hint: Passwords are case sensitive.</details>
 </Error>
 ```
 
+## Troubleshoot
+
+#### When setup as a Custom Menu in IFS EE Currency Rates window
+* Go to the Application Messages and Search for Message Function ```KNAKIT-UPDATE-CURRENCY-RATES```
+* Go to the details of the Application Message. If the message status is Failed, Check the error message in the error text box 
+* Double chick on the Address line to see the response message. Any IFS errors should capture in the response XML.
+
+```Please note that if the message status is Released or Waiting, there should be a problem with your Application Message processing.```
+
 ## FAQ
+
+#### Which Currencies are supported?
+Our API supports over 30 currencies published by European Central Bank. Full list of currencies can be found [here](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html). However, currencies enabled in IFS basic data will be added with the API call.
+
+#### When is the currency rates are updated?
+According to European Central Bank, the reference rates are usually updated around 16:00 CET on every working day. Please check [here](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html) for details.
+
 #### What IFS User and Permissions are required to use knak.it set currency rate api?
 We highly recommend to use a user who ONLY has access to login to IFS and insert currency rates. Also make sure that user is added to the Company.
 You can find a permission set with minimum permission needed in [source/ifs/server/security/KNAKIT-SET-CURRENCY-RATES.xml](source/ifs/server/security/KNAKIT-SET-CURRENCY-RATES.xml). 
@@ -183,4 +207,7 @@ You may import the permission set, Create a new user and grant only that and the
 
 Never use super users or Application Owner. We are not recording the userID and Password anywhere during the process but we cannot guarantee what's happening during the way.
 
+## Credits
+This solution is powered by [WSO2](https://wso2.com/integration/) which is one of the best and open source integration platforms and hosted in [Oracle Cloud](https://www.oracle.com/cloud/free). 
 
+:heartpulse: A big thank to awesome people who made these products!

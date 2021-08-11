@@ -14,24 +14,24 @@ It is an out of the box solution to update the IFS currency rates with a single 
 
 ## Getting Started
 You need a API key (which is free) to use the service. Send an email to [knakit.dev@gmail.com](mailto:knakit.dev@gmail.com?subject=IFS%20Currency%20Rates%20API%20key) with following information.
-* Customer ID: Your company name
-* Instance ID: IFS Instance (Dev/Test/Prod...etc)
-* IFS Url: IFS Instance url with port
-* IFS Version - Your IFS version (APPS75, APPS8, APPS9, APPS10)
-* Customer Contact: email for us to update about API changes or downtimes
+- [x] Customer ID: Your company name
+- [x] Instance ID: IFS Instance (Dev/Test/Prod...etc)
+- [x] IFS Url: IFS Instance url with port
+- [x] IFS Version - Your IFS version (APPS75, APPS8, APPS9, APPS10)
+- [x] Customer Contact: email for us to update about API changes or downtimes
 
 ## Setup
 #### IFS Connect Setup
 1. Download following files inculded in [source/ifs](https://github.com/knakit/set-ifs-currency-rates-api/tree/main/source)
-  * [Routing Address](source/ifs/server/connect_config/RouteAddress_knak.it_Update_IFS_Currency_Rates.xml)
-  * [Routing Condition](source/ifs/server/connect_config/RouteCondition_knak.it_Update_IFS_Currency_Rates.xml)
+   * [Routing Address](source/ifs/server/connect_config/RouteAddress_knak.it_Update_IFS_Currency_Rates.xml)
+   * [Routing Condition](source/ifs/server/connect_config/RouteCondition_knak.it_Update_IFS_Currency_Rates.xml)
 
 2. Import Routing Address
-  * Go to the Routing Adresses, Right mouse click, Import Address.
-  * Locate [RouteAddress_knak.it_Update_IFS_Currency_Rates.xml](source/ifs/server/connect_config/RouteAddress_knak.it_Update_IFS_Currency_Rates.xml) downloaded in step 1 and Press Open.
-  *  Locate ```knak.it Update IFS Currency Rates``` routing address.
-  * Right mouse click, Show Details
-  * Input IFS UserID and Password to invoke the request
+   * Go to the Routing Adresses, Right mouse click, Import Address.
+   * Locate [RouteAddress_knak.it_Update_IFS_Currency_Rates.xml](source/ifs/server/connect_config/RouteAddress_knak.it_Update_IFS_Currency_Rates.xml) downloaded in step 1 and Press Open.
+   *  Locate ```knak.it Update IFS Currency Rates``` routing address.
+   * Right mouse click, Show Details
+   * Input IFS UserID and Password to invoke the request
 
 | ![routing address setup](./doc/images/routing-address-setup.png) | 
 |:--:| 
@@ -41,16 +41,16 @@ You need a API key (which is free) to use the service. Send an email to [knakit.
 :red_square: Please read [FAQ](#faq) section on how to setup user and permission.
 
 3. Import Routing Rule
-  *  Go to the Routing Rules. Switch to Outbound tab. Right mouse click, Import Rule.
-  *  Locate [RouteCondition_knak.it_Update_IFS_Currency_Rates.xml](source/ifs/server/connect_config/RouteCondition_knak.it_Update_IFS_Currency_Rates.xml) downloaded in step 1 and Press Open.
+   *  Go to the Routing Rules. Switch to Outbound tab. Right mouse click, Import Rule.
+   *  Locate [RouteCondition_knak.it_Update_IFS_Currency_Rates.xml](source/ifs/server/connect_config/RouteCondition_knak.it_Update_IFS_Currency_Rates.xml) downloaded in step 1 and Press Open.
 
 #### Setup Custom Menu in IFS EE Currency Rates window
 1. Download following files inculded in [source/ifs](https://github.com/knakit/set-ifs-currency-rates-api/tree/main/source)
-  * [Application Configuration Package](source/ifs/server/appconfig/knakit-set-ifs-currency-rates-api.zip)
+   * [Application Configuration Package](source/ifs/server/appconfig/knakit-set-ifs-currency-rates-api.zip)
 
 2. Import and Publish Application Configuration Package
-  * Go to the Application Package, Right mouse click on the Custom Menu item, Show Details
-  * Change the highlighted fields with corresponing values you got with the api key email
+   * Go to the Application Package, Right mouse click on the Custom Menu item, Show Details
+   * Change the highlighted fields with corresponing values you got with the api key email
 
 | ![custom event setup](./doc/images/custom-menu-setup.png) | 
 |:--:| 

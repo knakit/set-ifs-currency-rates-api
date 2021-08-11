@@ -1,4 +1,4 @@
-# API to Update IFS Currency Rates
+# An out of the box solution for updating IFS currency rates
 knak.it IFS Currency Rates API is a free service for updating IFS currency rates values [published by the European Central Bank](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html).
 It is an out of the box solution to update the IFS currency rates with a single click and without needing to worry about any customization or aditional configuration.
 
@@ -8,6 +8,7 @@ It is an out of the box solution to update the IFS currency rates with a single 
 * [About the API and Usage](#about-the-api-and-usage)
 * [Troubleshoot](#troubleshoot)
 * [FAQ](#faq)
+* [Issues/Feature requests](#issuesfeature-requests)
 * [Credits](#credits)
 
 
@@ -16,6 +17,7 @@ You need a API key (which is free) to use the service. Send an email to [knakit.
 * Customer ID: Your company name
 * Instance ID: IFS Instance (Dev/Test/Prod...etc)
 * IFS Url: IFS Instance url with port
+* IFS Version - Your IFS version (APPS75, APPS8, APPS9, APPS10)
 * Customer Contact: email for us to update about API changes or downtimes
 
 ## Setup
@@ -206,6 +208,16 @@ You can find a permission set with minimum permission needed in [source/ifs/serv
 You may import the permission set, Create a new user and grant only that and the Company access. 
 
 Never use super users or Application Owner. We are not recording the userID and Password anywhere during the process but we cannot guarantee what's happening during the way.
+
+#### What technologies are used in this service?
+IFS currency rate update API uses [IFS-WSO2 ESB Connector](https://github.com/knakit/wso2-esb-connector-ifs) which is based on IFS Java Access Provider. Complete IFS code can be found in [source/wso2/src/main/synapse-config/sequences/SeqInsertIFSCurrencyRatePLSQL.xml](source/wso2/src/main/synapse-config/sequences/SeqInsertIFSCurrencyRatePLSQL.xml)
+
+#### Which IFS versions are supported?
+We have tested this with IFS 10 but it should work with IFS versions from App 7.5 upwards.
+Make sure you use the correct IFS version in the request.
+
+## Issues/Feature requests
+If you have a GitHub account, Please feel free to use [issues](https://github.com/knakit/set-ifs-currency-rates-api/issues). Otherwise send an email to [knakit.dev@gmail.com](mailto:knakit.dev@gmail.com) with details.
 
 ## Credits
 This solution is powered by [WSO2](https://wso2.com/integration/) which is one of the best and open source integration platforms and hosted in [Oracle Cloud](https://www.oracle.com/cloud/free). 

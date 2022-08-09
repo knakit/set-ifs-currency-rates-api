@@ -56,6 +56,7 @@ DECLARE
      info_             VARCHAR2(2000) ;
      conv_rate_        NUMBER;
      conv_factor_      NUMBER;
+     inverted_         VARCHAR2(10);
      
      dummy_             NUMBER;
      info_text_        VARCHAR2(2000) := '';
@@ -76,8 +77,13 @@ DECLARE
         OPEN currency_rate_exist (curr_type.company, curr_type.currency_type,curr_code, valid_from);
         FETCH currency_rate_exist INTO dummy_;
         IF (currency_rate_exist%NOTFOUND) THEN      
-           conv_factor_ := Currency_Code_API.Get_Conversion_Factor (curr_type.company, curr_code);
-           conv_rate_ := curr_rate*conv_factor_;
+           conv_factor_ := Currency_Code_API.Get_Conversion_Factor (curr_type.company, curr_code);           
+           inverted_ := Currency_Code_API.Get_Inverted(curr_type.company, curr_type.ref_currency_code);           
+           IF (inverted_ = 'TRUE') THEN
+             conv_rate_ := (1/curr_rate)*conv_factor_;
+           ELSE
+             conv_rate_ := curr_rate*conv_factor_;
+           END IF;
            Client_SYS.Clear_Attr(rate_attr_);
            Client_SYS.Add_To_Attr('COMPANY', curr_type.company,rate_attr_);
            Client_SYS.Add_To_Attr('CURRENCY_TYPE', curr_type.currency_type, rate_attr_);

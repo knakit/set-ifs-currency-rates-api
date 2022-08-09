@@ -129,7 +129,7 @@ BEGIN
     :VALID_FROM := valid_from_;
     
    company_api.exist(company_);
-   currency_type_api.exist(company_, currency_type_);
+   --currency_type_api.exist(company_, currency_type_);
      
    IF ref_currency_code_ != currency_type_api.get_ref_currency_code(company_,currency_type_) THEN
      ERROR_Sys.Appl_General('CKnakitCurrencyUtil', 'CINVALIDREFCURR: Provided  Ref Currency Code ' || ref_currency_code_  || ' for Company ' ||company_  || ', Currency Type ' || currency_type_ || ' is incorrect. It should be ' || currency_type_api.get_ref_currency_code(company_,currency_type_));
